@@ -5,6 +5,10 @@ import com.example.newsreview.domain.post.dto.PostRequestDto;
 import com.example.newsreview.domain.post.dto.PostResponseDto;
 import com.example.newsreview.domain.post.sevice.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +21,14 @@ public class PostController {
     @PostMapping("/posts/form")
     public PostResponseDto save (@SessionAttribute(name = Const.LOGIN_USER) Long userId, @RequestBody PostRequestDto dto) {
         return postService.save(userId, dto);
+    }
+
+    //페이징 생성일자 기준으로 10개씩 보여주기
+    @GetMapping("/posts/pages")
+    public void paging (Model model,
+                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC)Pageable pageable)
+    {
+        model.addAttribute("postList", postService.getPageList(pageable));
     }
 
     @GetMapping("/posts")

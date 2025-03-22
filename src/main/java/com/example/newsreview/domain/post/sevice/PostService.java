@@ -9,6 +9,8 @@ import com.example.newsreview.domain.post.repository.PostRepository;
 import com.example.newsreview.domain.profile.entity.Profile;
 import com.example.newsreview.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,11 @@ public class PostService {
                 savedPost.getLikeCount(), savedPost.getCommentCount(), savedPost.getViewCount(),
                 savedPost.getCreatedAt(), savedPost.getUpdated());
 
+    }
+
+    @Transactional
+    public Page<Post> getPageList(Pageable pageable) {//페이징 처리
+        return postRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
